@@ -8,6 +8,7 @@ public class ComputerInteraction : MonoBehaviour
     public GameObject interactionMessage;
     public Camera playerCamera;
     public Camera computerCamera;
+    public GameObject puntatore;
 
 
     private bool isNear = false;
@@ -21,6 +22,7 @@ public class ComputerInteraction : MonoBehaviour
 
     void Start()
     {
+        puntatore.SetActive(true);
         controller = player.GetComponent<CharacterController>();
         interactionMessage.SetActive(false);
         movementScript = player.GetComponent<PlayerMovement>();
@@ -47,10 +49,13 @@ public class ComputerInteraction : MonoBehaviour
         originalPosition = player.position;
         originalRotation = player.rotation;
 
+
         // Ferma il movimento
         if (controller != null)
             controller.enabled = false;
 
+
+        puntatore.SetActive(false); //disattivo il puntatore
         movementScript.enabled = false; //disattivo movimento
         cameraLookScript.enabled = false; //disattivo movimento visuale
         player.position = computerViewPoint.position;
@@ -62,8 +67,7 @@ public class ComputerInteraction : MonoBehaviour
         computerCamera.enabled = true;
 
         computerUI.SetActive(true); //attivo il panel pc
-        interactionMessage.SetActive(false);
-
+        interactionMessage.SetActive(false); //disattivo messaggio di interazione
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
     }
@@ -81,6 +85,7 @@ public class ComputerInteraction : MonoBehaviour
         playerCamera.enabled = true;
         computerCamera.enabled = false;
 
+        puntatore.SetActive(true); //riattivo il puntatore
         computerUI.SetActive(false); //disattivo il panel pc
         cameraLookScript.enabled = true; //riattivo il movimento visuale
         movementScript.enabled = true; //riattivo movimento

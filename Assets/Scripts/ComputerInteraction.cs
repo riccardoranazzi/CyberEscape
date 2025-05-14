@@ -6,7 +6,8 @@ public class ComputerInteraction : MonoBehaviour
     public Transform computerViewPoint;
     public GameObject computerUI;
     public GameObject interactionMessage;
-    public GameObject playerCamera;
+    public Camera playerCamera;
+    public Camera computerCamera;
 
 
     private bool isNear = false;
@@ -24,6 +25,9 @@ public class ComputerInteraction : MonoBehaviour
         interactionMessage.SetActive(false);
         movementScript = player.GetComponent<PlayerMovement>();
         cameraLookScript = playerCamera.GetComponent<MouseLook>();
+        computerUI.SetActive(false);
+        computerCamera.enabled = false;
+        playerCamera.enabled = true;
     }
 
     void Update()
@@ -53,7 +57,11 @@ public class ComputerInteraction : MonoBehaviour
         player.rotation = computerViewPoint.rotation;
 
 
-        //computerUI.SetActive(true);
+        //cambio camera
+        playerCamera.enabled = false;
+        computerCamera.enabled = true;
+
+        computerUI.SetActive(true); //attivo il panel pc
         interactionMessage.SetActive(false);
 
         Cursor.lockState = CursorLockMode.None;
@@ -69,7 +77,11 @@ public class ComputerInteraction : MonoBehaviour
         if (controller != null)
             controller.enabled = true;
 
-        //computerUI.SetActive(false);
+        //cambio camera
+        playerCamera.enabled = true;
+        computerCamera.enabled = false;
+
+        computerUI.SetActive(false); //disattivo il panel pc
         cameraLookScript.enabled = true; //riattivo il movimento visuale
         movementScript.enabled = true; //riattivo movimento
         Cursor.lockState = CursorLockMode.Locked;

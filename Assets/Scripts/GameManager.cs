@@ -1,16 +1,29 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public GameObject exitMessageUI;
+    public GameObject exitTrigger;
+
+    private bool gameCompleted = false;
+    public void ShowExitMessage()
+
     {
-        
+        gameCompleted = true;
+        exitMessageUI.SetActive(true);
+        exitTrigger.SetActive(true);
     }
 
-    // Update is called once per frame
-    void Update()
+    public bool IsGameCompleted()
     {
-        
+        return gameCompleted;
+    }
+
+    public void EndGame()
+
+    {
+        Debug.Log("Fine del gioco!");
     }
 }

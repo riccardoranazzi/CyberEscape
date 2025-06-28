@@ -3,33 +3,26 @@ using UnityEngine;
 public class ComputerInteraction : MonoBehaviour
 {
     public Transform player;
-    public Transform computerViewPoint;
-    public GameObject computerUI;
+    public GameObject computerUI; // NewComputerUI generale
+    public GameObject panelOutlook; // Panel_Outlook interno
     public GameObject interactionMessage;
-    public Camera playerCamera;
-    public Camera computerCamera;
     public GameObject puntatore;
-
 
     private bool isNear = false;
     private bool isUsing = false;
-    private Vector3 originalPosition;
-    private Quaternion originalRotation;
+
     private CharacterController controller;
     private PlayerMovement movementScript;
     private MouseLook cameraLookScript;
-
 
     void Start()
     {
         puntatore.SetActive(true);
         controller = player.GetComponent<CharacterController>();
         interactionMessage.SetActive(false);
-        movementScript = player.GetComponent<PlayerMovement>();
-        cameraLookScript = playerCamera.GetComponent<MouseLook>();
         computerUI.SetActive(false);
-        computerCamera.enabled = false;
-        playerCamera.enabled = true;
+        movementScript = player.GetComponent<PlayerMovement>();
+        // cameraLookScript = playerCamera.GetComponent<MouseLook>();
     }
 
     void Update()
@@ -46,28 +39,19 @@ public class ComputerInteraction : MonoBehaviour
     void ActivateComputer()
     {
         isUsing = true;
-        originalPosition = player.position;
-        originalRotation = player.rotation;
-
 
         // Ferma il movimento
         if (controller != null)
             controller.enabled = false;
 
+        puntatore.SetActive(false); // disattivo il puntatore HUD
+        movementScript.enabled = false; // disattivo movimento player
+        // cameraLookScript.enabled = false; // disattivo mouse look se usato
 
-        puntatore.SetActive(false); //disattivo il puntatore
-        movementScript.enabled = false; //disattivo movimento
-        cameraLookScript.enabled = false; //disattivo movimento visuale
-        player.position = computerViewPoint.position;
-        player.rotation = computerViewPoint.rotation;
+        computerUI.SetActive(true); // attiva l'intera NewComputerUI
+        panelOutlook.SetActive(true); // mostra Panel_Outlook come prima schermata
+        interactionMessage.SetActive(false); // nasconde messaggio E
 
-
-        //cambio camera
-        playerCamera.enabled = false;
-        computerCamera.enabled = true;
-
-        computerUI.SetActive(true); //attivo il panel pc
-        interactionMessage.SetActive(false); //disattivo messaggio di interazione
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
     }
@@ -75,20 +59,15 @@ public class ComputerInteraction : MonoBehaviour
     void DeactivateComputer()
     {
         isUsing = false;
-        player.position = originalPosition;
-        player.rotation = originalRotation;
 
         if (controller != null)
             controller.enabled = true;
 
-        //cambio camera
-        playerCamera.enabled = true;
-        computerCamera.enabled = false;
+        puntatore.SetActive(true); // riattivo il puntatore HUD
+        movementScript.enabled = true; // riattivo movimento player
+        // cameraLookScript.enabled = true; // riattivo mouse look se usato
 
-        puntatore.SetActive(true); //riattivo il puntatore
-        computerUI.SetActive(false); //disattivo il panel pc
-        cameraLookScript.enabled = true; //riattivo il movimento visuale
-        movementScript.enabled = true; //riattivo movimento
+        computerUI.SetActive(false); // disattiva l'intera NewComputerUI
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
@@ -109,7 +88,7 @@ public class ComputerInteraction : MonoBehaviour
         {
             isNear = false;
             interactionMessage.SetActive(false);
-            Debug.Log("Giocatore allontanato dal computer");
+            Debug.Log("Giocatore si è allontanato dal computer");
 
             if (isUsing)
                 DeactivateComputer();

@@ -73,10 +73,8 @@ Giulia Ferri – Dip. Operazioni",
             oggetto = "Autorizzazione pagamento fornitore – Ordine n. 4539",
             corpo = @"Ciao,
 ti inoltro la distinta per l’ordine 4539, già validata in piattaforma SAP.
-Qui trovi il documento:
-https://intranet.azienda.local/modulo
 
-Firma digitalmente e inoltralo al Finance.
+ATrovi il file al link in allegato.
 Grazie,
 Ufficio Acquisti",
             link = "https://intranet.azienda.local/modulo",
@@ -92,10 +90,8 @@ Ufficio Acquisti",
             mittente = "IT Support <it-support@outlook-security.com>",
             oggetto = "[Notifica IT] Accesso bloccato - Verifica richiesta",
             corpo = @"Abbiamo rilevato un tentativo di accesso sospetto.
-Conferma la tua identità:
-http://outl0ok-verifica-security.info
-
-L’account sarà sospeso tra 30 minuti.",
+Conferma la tua identità.
+Clicca qui o il tuo account sarà sospeso tra 30 minuti.",
             iniziali = "IT",
             link = "http://outl0ok-verifica-security.info",
             isPhishing = true,
@@ -109,8 +105,6 @@ L’account sarà sospeso tra 30 minuti.",
             mittente = "Pagamento Web <no-reply@pagamentoweb.biz>",
             oggetto = "Ricevuta pagamento disponibile",
             corpo = @"La ricevuta del tuo pagamento è pronta:
-http://pagamentoweb.biz/documento
-
 Clicca qui per contestare la transazione se non riconosci l’addebito.",
             link = "http://pagamentoweb.biz/documento",
             iniziali = "PW",
@@ -201,8 +195,9 @@ Password: 2206",
             oggetto = "Invio contratto aggiornato per firma",
             corpo = @"Allego il contratto aggiornato, in formato PDF firmabile.
 Una volta firmato, caricalo su:
-https://doc.azienda.it/caricamento",
-            link = "contratto_firma_vfinal.pdf",
+",
+            link = @"https://doc.azienda.it/caricamento
+            contratto_firma_vfinal.pdf",
             iniziali = "LD",
             isPhishing = false,
             isAmbigua = false

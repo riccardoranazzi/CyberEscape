@@ -22,7 +22,7 @@ public class ComputerInteraction : MonoBehaviour
         interactionMessage.SetActive(false);
         computerUI.SetActive(false);
         movementScript = player.GetComponent<PlayerMovement>();
-        // cameraLookScript = playerCamera.GetComponent<MouseLook>();
+
     }
 
     void Update()
@@ -46,7 +46,6 @@ public class ComputerInteraction : MonoBehaviour
 
         puntatore.SetActive(false); // disattivo il puntatore HUD
         movementScript.enabled = false; // disattivo movimento player
-        // cameraLookScript.enabled = false; // disattivo mouse look se usato
 
         computerUI.SetActive(true); // attiva l'intera NewComputerUI
         panelOutlook.SetActive(true); // mostra Panel_Outlook come prima schermata
@@ -65,7 +64,6 @@ public class ComputerInteraction : MonoBehaviour
 
         puntatore.SetActive(true); // riattivo il puntatore HUD
         movementScript.enabled = true; // riattivo movimento player
-        // cameraLookScript.enabled = true; // riattivo mouse look se usato
 
         computerUI.SetActive(false); // disattiva l'intera NewComputerUI
         Cursor.lockState = CursorLockMode.Locked;

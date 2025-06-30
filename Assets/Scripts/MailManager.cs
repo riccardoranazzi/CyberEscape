@@ -264,6 +264,7 @@ Una volta firmato, caricalo su:
 
         RefreshMailList();
         CloseMailDetails();
+        ControllaMailGestite();
 
         // Feedback base
         corpoText.text += "\n\n[Azione: inoltrata o aperta]";
@@ -286,5 +287,27 @@ Una volta firmato, caricalo su:
 
         RefreshMailList();
         CloseMailDetails();
+        ControllaMailGestite();
     }
+
+    //funzione per trogliere le check mail dalla checklist
+    public void ControllaMailGestite()
+    {
+        bool tutteGestite = true;
+
+        foreach (Mail mail in mails)
+        {
+            if (string.IsNullOrEmpty(mail.azione))
+            {
+                tutteGestite = false;
+                break;
+            }
+        }
+
+        if (tutteGestite)
+        {
+            FindObjectOfType<ChecklistManager>().CompletaTask("Rispondi a tutte le mail");
+        }
+    }
+
 }

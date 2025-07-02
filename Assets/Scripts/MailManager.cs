@@ -16,6 +16,7 @@ public class MailManager : MonoBehaviour
     public TMP_Text oggettoText;
     public TMP_Text corpoText;
     public TMP_Text linkText;
+    public TMP_Text inizialiText;
 
     private List<Mail> mails = new List<Mail>();
     private Mail mailSelezionata;
@@ -45,8 +46,35 @@ Dott. G. Martelli – CEO Nom3azienda.com",
             link = "Dettagli_Transfer_CEO2024.zip",
             iniziali = "GM",
             isPhishing = true,
-            isAmbigua = false
+            isAmbigua = false,
+            punteggioCorretto = 5, // es. phishing facile +5
+            punteggioSbagliato = -10 // phishing facile -10
         });
+
+        // PHISHING AMBIGUA
+        mails.Add(new Mail
+        {
+            id = mailIdCounter++,
+            mittente = "Amministrazione HR <hr@azienda.com>",
+            oggetto = "Aggiornamento modulo benefit annuale – Azione richiesta",
+            corpo = @"Gentile dipendente,
+
+ti inviamo in allegato il modulo aggiornato per i benefit aziendali 2025.
+Ti chiediamo di verificarlo e confermare eventuali modifiche entro domani alle 12:00 per garantire la corretta registrazione nel sistema paghe.
+
+Per motivi di sicurezza, il documento è protetto da password.
+Password: Benefit2025
+
+Grazie per la collaborazione,
+Ufficio Risorse Umane",
+            link = "Modulo_Benefit_2025.zip",
+            iniziali = "HR",
+            isPhishing = true,
+            isAmbigua = true,
+            punteggioCorretto = 10, 
+            punteggioSbagliato = -5 
+        });
+
 
         // AMBIGUA MA AFFIDABILE (spese straordinarie)
         mails.Add(new Mail
@@ -62,7 +90,9 @@ Giulia Ferri – Dip. Operazioni",
             link = "Modulo_Approvazione_Spese_Q2.pdf",
             iniziali = "GF",
             isPhishing = false,
-            isAmbigua = true
+            isAmbigua = true,
+            punteggioCorretto = 10, // es. phishing facile +5
+            punteggioSbagliato = -5 // phishing facile -10
         });
 
         // AFFIDABILE (ordine pagamento)
@@ -80,7 +110,9 @@ Ufficio Acquisti",
             link = "https://intranet.azienda.local/modulo",
             iniziali = "UA",
             isPhishing = false,
-            isAmbigua = false
+            isAmbigua = false,
+            punteggioCorretto = 5, // es. phishing facile +5
+            punteggioSbagliato = -10 // phishing facile -10
         });
 
         // OPEN PHISHING LINK 1
@@ -95,7 +127,9 @@ Clicca qui o il tuo account sarà sospeso tra 30 minuti.",
             iniziali = "IT",
             link = "http://outl0ok-verifica-security.info",
             isPhishing = true,
-            isAmbigua = false
+            isAmbigua = false,
+            punteggioCorretto = 5, // es. phishing facile +5
+            punteggioSbagliato = -10 // phishing facile -10
         });
 
         // OPEN PHISHING LINK 2
@@ -109,7 +143,9 @@ Clicca qui per contestare la transazione se non riconosci l’addebito.",
             link = "http://pagamentoweb.biz/documento",
             iniziali = "PW",
             isPhishing = true,
-            isAmbigua = false
+            isAmbigua = false,
+            punteggioCorretto = 5, // es. phishing facile +5
+            punteggioSbagliato = -10 // phishing facile -10
         });
 
         // OPEN AMBIGUA MA AFFIDABILE
@@ -125,7 +161,9 @@ https://intranet.azienda.local/security/accesso-anomalo",
             link = "https://intranet.azienda.local/security/accesso-anomalo",
             iniziali = "ST",
             isPhishing = false,
-            isAmbigua = true
+            isAmbigua = true,
+            punteggioCorretto = 10, // es. phishing facile +5
+            punteggioSbagliato = -5 // phishing facile -10
         });
 
         // OPEN AFFIDABILE
@@ -144,7 +182,9 @@ https://portal.azienda.it/security/profilo",
             link = "https://portal.azienda.it/security/profilo",
             iniziali = "PS",
             isPhishing = false,
-            isAmbigua = false
+            isAmbigua = false,
+            punteggioCorretto = 5, // es. phishing facile +5
+            punteggioSbagliato = -10 // phishing facile -10
         });
 
         // EMAIL CON FILE INFETTO - PHISHING 1
@@ -158,7 +198,9 @@ Password: 2206",
             link = "fattura_9033.zip",
             iniziali = "CF",
             isPhishing = true,
-            isAmbigua = false
+            isAmbigua = false,
+            punteggioCorretto = 5, // es. phishing facile +5
+            punteggioSbagliato = -10 // phishing facile -10
         });
 
         // EMAIL CON FILE INFETTO - PHISHING 2
@@ -171,7 +213,9 @@ Password: 2206",
             link = "modulo_iscrizione_evento.docm",
             iniziali = "CE",
             isPhishing = true,
-            isAmbigua = false
+            isAmbigua = false,
+            punteggioCorretto = 5, // es. phishing facile +5
+            punteggioSbagliato = -10 // phishing facile -10
         });
 
         // EMAIL AMBIGUA MA AFFIDABILE - FILE
@@ -184,7 +228,9 @@ Password: 2206",
             link = "contratto_v3.2_signed.pdf",
             iniziali = "LD",
             isPhishing = false,
-            isAmbigua = true
+            isAmbigua = true,
+            punteggioCorretto = 10, // es. phishing facile +5
+            punteggioSbagliato = -5 // phishing facile -10
         });
 
         // EMAIL AFFIDABILE - FILE + LINK
@@ -200,7 +246,9 @@ Una volta firmato, caricalo su:
             contratto_firma_vfinal.pdf",
             iniziali = "LD",
             isPhishing = false,
-            isAmbigua = false
+            isAmbigua = false,
+            punteggioCorretto = 5, // es. phishing facile +5
+            punteggioSbagliato = -10 // phishing facile -10
         });
     }
 
@@ -244,6 +292,7 @@ Una volta firmato, caricalo su:
         oggettoText.text = mail.oggetto;
         corpoText.text = mail.corpo;
         linkText.text = mail.link;
+        inizialiText.text = mail.iniziali;
         
 
         // chiama UI Manager
@@ -266,6 +315,8 @@ Una volta firmato, caricalo su:
         CloseMailDetails();
         ControllaMailGestite();
 
+        GestisciAzioneMail(mailSelezionata, "aperta");
+
         // Feedback base
         corpoText.text += "\n\n[Azione: inoltrata o aperta]";
     }
@@ -284,6 +335,8 @@ Una volta firmato, caricalo su:
         {
             corpoText.text += "\n\n[✖ Falso positivo]";
         }
+
+        GestisciAzioneMail(mailSelezionata, "segnalata");
 
         RefreshMailList();
         CloseMailDetails();
@@ -308,6 +361,28 @@ Una volta firmato, caricalo su:
         {
             FindObjectOfType<ChecklistManager>().CompletaTask("Rispondi a tutte le mail");
         }
+    }
+
+    public void GestisciAzioneMail(Mail mail, string azione)
+    {
+        mail.azione = azione;
+
+        if (azione == "segnalata")
+        {
+            if (mail.isPhishing)
+                ScoreManager.instance.AggiungiPunti(mail.punteggioCorretto);
+            else
+                ScoreManager.instance.SottraiPunti(mail.punteggioSbagliato);
+        }
+        else if (azione == "aperta")
+        {
+            if (!mail.isPhishing)
+                ScoreManager.instance.AggiungiPunti(mail.punteggioCorretto);
+            else
+                ScoreManager.instance.SottraiPunti(mail.punteggioSbagliato);
+        }
+
+        // Aggiorna checklist, refresh lista, ecc.
     }
 
 }

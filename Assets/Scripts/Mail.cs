@@ -13,6 +13,9 @@ public class Mail
     public bool isPhishing;
     public bool isAmbigua;
 
+    public int punteggioCorretto;
+    public int punteggioSbagliato;
+
     public string azione = ""; //segnalata, inoltrata/aperta, "" default
 }
 

@@ -42,13 +42,13 @@ sto lavorando a una trattativa riservata e ho bisogno che tu effettui un bonific
 I dettagli sono confidenziali, ti allego il file criptato (password: CEO2024).
 Ti aggiorno nel pomeriggio.
 
-Dott. G. Martelli – CEO Nom3azienda.com",
+Dott. G. Martelli – CEO azi3nda.com",
             link = "Dettagli_Transfer_CEO2024.zip",
             iniziali = "GM",
             isPhishing = true,
             isAmbigua = false,
-            punteggioCorretto = 5, // es. phishing facile +5
-            punteggioSbagliato = -10 // phishing facile -10
+            punteggioCorretto = 5,
+            punteggioSbagliato = -10
         });
 
         // PHISHING AMBIGUA
@@ -91,8 +91,8 @@ Giulia Ferri – Dip. Operazioni",
             iniziali = "GF",
             isPhishing = false,
             isAmbigua = true,
-            punteggioCorretto = 10, // es. phishing facile +5
-            punteggioSbagliato = -5 // phishing facile -10
+            punteggioCorretto = 10, 
+            punteggioSbagliato = -5 
         });
 
         // AFFIDABILE (ordine pagamento)
@@ -104,7 +104,7 @@ Giulia Ferri – Dip. Operazioni",
             corpo = @"Ciao,
 ti inoltro la distinta per l’ordine 4539, già validata in piattaforma SAP.
 
-ATrovi il file al link in allegato.
+Trovi il file al link in allegato.
 Grazie,
 Ufficio Acquisti",
             link = "https://intranet.azienda.local/modulo",
@@ -123,7 +123,7 @@ Ufficio Acquisti",
             oggetto = "[Notifica IT] Accesso bloccato - Verifica richiesta",
             corpo = @"Abbiamo rilevato un tentativo di accesso sospetto.
 Conferma la tua identità.
-Clicca qui o il tuo account sarà sospeso tra 30 minuti.",
+Clicca sul link qui sotto o il tuo account sarà sospeso tra 30 minuti.",
             iniziali = "IT",
             link = "http://outl0ok-verifica-security.info",
             isPhishing = true,
@@ -132,6 +132,7 @@ Clicca qui o il tuo account sarà sospeso tra 30 minuti.",
             punteggioSbagliato = -10 // phishing facile -10
         });
 
+        /*
         // OPEN PHISHING LINK 2
         mails.Add(new Mail
         {
@@ -144,9 +145,10 @@ Clicca qui per contestare la transazione se non riconosci l’addebito.",
             iniziali = "PW",
             isPhishing = true,
             isAmbigua = false,
-            punteggioCorretto = 5, // es. phishing facile +5
-            punteggioSbagliato = -10 // phishing facile -10
+            punteggioCorretto = 5,
+            punteggioSbagliato = -10 
         });
+        */
 
         // OPEN AMBIGUA MA AFFIDABILE
         mails.Add(new Mail
@@ -156,21 +158,22 @@ Clicca qui per contestare la transazione se non riconosci l’addebito.",
             oggetto = "Accesso insolito al tuo account aziendale",
             corpo = @"Abbiamo rilevato un accesso da una nuova postazione (IP: 185.64.22.11).
 Se si tratta di te, ignora.
-In caso contrario:
-https://intranet.azienda.local/security/accesso-anomalo",
+In caso contrario, clicca il link qui sotto:",
             link = "https://intranet.azienda.local/security/accesso-anomalo",
             iniziali = "ST",
             isPhishing = false,
             isAmbigua = true,
-            punteggioCorretto = 10, // es. phishing facile +5
-            punteggioSbagliato = -5 // phishing facile -10
+            punteggioCorretto = 10, 
+            punteggioSbagliato = -5 
         });
+
+        /*
 
         // OPEN AFFIDABILE
         mails.Add(new Mail
         {
             id = mailIdCounter++,
-            mittente = "Portal Security <security@portal.azienda.it>",
+            mittente = "Portal Security <security@azienda.com>",
             oggetto = "Conferma accesso dispositivo non riconosciuto",
             corpo = @"Gentile utente,
 login rilevato da un nuovo dispositivo.
@@ -186,6 +189,7 @@ https://portal.azienda.it/security/profilo",
             punteggioCorretto = 5, // es. phishing facile +5
             punteggioSbagliato = -10 // phishing facile -10
         });
+        
 
         // EMAIL CON FILE INFETTO - PHISHING 1
         mails.Add(new Mail
@@ -199,9 +203,10 @@ Password: 2206",
             iniziali = "CF",
             isPhishing = true,
             isAmbigua = false,
-            punteggioCorretto = 5, // es. phishing facile +5
-            punteggioSbagliato = -10 // phishing facile -10
+            punteggioCorretto = 5, 
+            punteggioSbagliato = -10 
         });
+        
 
         // EMAIL CON FILE INFETTO - PHISHING 2
         mails.Add(new Mail
@@ -214,23 +219,24 @@ Password: 2206",
             iniziali = "CE",
             isPhishing = true,
             isAmbigua = false,
-            punteggioCorretto = 5, // es. phishing facile +5
-            punteggioSbagliato = -10 // phishing facile -10
+            punteggioCorretto = 5,
+            punteggioSbagliato = -10 
         });
-
-        // EMAIL AMBIGUA MA AFFIDABILE - FILE
+        */
+        // EMAIL AMBIGUA CON FILE:EXE
         mails.Add(new Mail
         {
             id = mailIdCounter++,
             mittente = "Legal Department <legal@azienda.com>",
             oggetto = "Contratto aggiornato da firmare",
-            corpo = @"Allego il documento aggiornato con le modifiche richieste.",
-            link = "contratto_v3.2_signed.pdf",
+            corpo = @"Allego il documento aggiornato con le modifiche richieste.
+Apreire il file e inviarlo controfirmato per avviare la pratica.",
+            link = "contratto_v3.2.pdf.exe",
             iniziali = "LD",
-            isPhishing = false,
+            isPhishing = true,
             isAmbigua = true,
-            punteggioCorretto = 10, // es. phishing facile +5
-            punteggioSbagliato = -5 // phishing facile -10
+            punteggioCorretto = 10, 
+            punteggioSbagliato = -5 
         });
 
         // EMAIL AFFIDABILE - FILE + LINK
@@ -239,16 +245,13 @@ Password: 2206",
             id = mailIdCounter++,
             mittente = "Legal Department <legal@azienda.com>",
             oggetto = "Invio contratto aggiornato per firma",
-            corpo = @"Allego il contratto aggiornato, in formato PDF firmabile.
-Una volta firmato, caricalo su:
-",
-            link = @"https://doc.azienda.it/caricamento
-            contratto_firma_vfinal.pdf",
+            corpo = @"Allego il contratto aggiornato, in formato PDF firmabile.",
+            link = @"contratto_firma_vfinal.pdf",
             iniziali = "LD",
             isPhishing = false,
             isAmbigua = false,
-            punteggioCorretto = 5, // es. phishing facile +5
-            punteggioSbagliato = -10 // phishing facile -10
+            punteggioCorretto = 5,
+            punteggioSbagliato = -10 
         });
     }
 
@@ -370,16 +373,28 @@ Una volta firmato, caricalo su:
         if (azione == "segnalata")
         {
             if (mail.isPhishing)
+            {
                 ScoreManager.instance.AggiungiPunti(mail.punteggioCorretto);
+                // Azione corretta: non riduce indicator
+            }
             else
+            {
                 ScoreManager.instance.SottraiPunti(mail.punteggioSbagliato);
+                IndicatorManager.instance.RiduciValore(25);
+            }
         }
         else if (azione == "aperta")
         {
             if (!mail.isPhishing)
+            {
                 ScoreManager.instance.AggiungiPunti(mail.punteggioCorretto);
+                // Azione corretta: non riduce indicator
+            }
             else
+            {
                 ScoreManager.instance.SottraiPunti(mail.punteggioSbagliato);
+                IndicatorManager.instance.RiduciValore(25);
+            }
         }
 
         // Aggiorna checklist, refresh lista, ecc.

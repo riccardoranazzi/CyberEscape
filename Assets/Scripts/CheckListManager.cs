@@ -11,22 +11,21 @@ public class ChecklistManager : MonoBehaviour
 
     void Start()
     {
-        // Esempio inizializzazione
-        checklist.Add(new ChecklistItem("Rispondi a tutte le mail"));
-        checklist.Add(new ChecklistItem("Segnala le mail di phishing"));
-        checklist.Add(new ChecklistItem("Analizza log di sistema"));
+        // Esempio task progressiva Fase 1
+        checklist.Add(new ChecklistItem(0, "Controlla e rispondi a tutte le mail", MailManager.instance.GetNumeroMailTotali()));
 
         AggiornaChecklistUI();
     }
 
-    public void CompletaTask(string descrizione)
+
+    public void CompletaTask(int fase)
     {
         foreach (ChecklistItem item in checklist)
         {
-            if (item.descrizione == descrizione)
+            if (item.fase == fase)
             {
                 item.completato = true;
-                Debug.Log("Task completato: " + descrizione);
+                Debug.Log("Task completato: " + item.fase + ": " + item.descrizione);
                 break;
             }
         }
@@ -37,26 +36,25 @@ public class ChecklistManager : MonoBehaviour
 
     void AggiornaChecklistUI()
     {
-        // Pulisci lista UI
         foreach (Transform child in checklistContent)
         {
             Destroy(child.gameObject);
         }
 
-        // Ricrea lista aggiornata
         foreach (ChecklistItem item in checklist)
         {
             GameObject obj = Instantiate(checklistItemPrefab, checklistContent);
             TMP_Text txt = obj.GetComponentInChildren<TMP_Text>();
-            txt.text = item.descrizione;
 
-            // Cambia colore o aggiungi ✔️ se completato
-            if (item.completato)
-                txt.color = Color.green;
+            if (item.progressiTotali > 0)
+                txt.text = $"{item.descrizione}: {item.progressiAttuali}/{item.progressiTotali}";
             else
-                txt.color = Color.black;
+                txt.text = item.descrizione;
+
+            txt.color = item.completato ? Color.green : Color.black;
         }
     }
+
 
     void VerificaChecklistCompletata()
     {
@@ -73,8 +71,29 @@ public class ChecklistManager : MonoBehaviour
 
         if (tuttiCompletati)
         {
-            Debug.Log("✔️ Tutte le task completate!");
+            Debug.Log("Tutte le task completate!");
+            GameManager.instance.CompletaFase();
             // Trigger prossima fase qui se serve
         }
     }
+
+    public void IncrementaProgressi(int fase)
+    {
+        foreach (ChecklistItem item in checklist)
+        {
+            if (item.fase == fase)
+            {
+                item.progressiAttuali++;
+
+                if (item.progressiAttuali >= item.progressiTotali)
+                    item.completato = true;
+
+                break;
+            }
+        }
+
+        AggiornaChecklistUI();
+        VerificaChecklistCompletata();
+    }
+
 }

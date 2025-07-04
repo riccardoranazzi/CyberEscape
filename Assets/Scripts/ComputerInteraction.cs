@@ -3,10 +3,10 @@ using UnityEngine;
 public class ComputerInteraction : MonoBehaviour
 {
     public Transform player;
-    public GameObject computerUI; // NewComputerUI generale
-    public GameObject panelOutlook; // Panel_Outlook interno
     public GameObject interactionMessage;
     public GameObject puntatore;
+    public GameObject[] panelsPCDisplay; 
+
 
     private bool isNear = false;
     private bool isUsing = false;
@@ -19,10 +19,9 @@ public class ComputerInteraction : MonoBehaviour
     {
         puntatore.SetActive(true);
         controller = player.GetComponent<CharacterController>();
-        interactionMessage.SetActive(false);
-        computerUI.SetActive(false);
         movementScript = player.GetComponent<PlayerMovement>();
-
+        interactionMessage.SetActive(false);
+        cameraLookScript = player.GetComponentInChildren<MouseLook>();
     }
 
     void Update()
@@ -40,20 +39,26 @@ public class ComputerInteraction : MonoBehaviour
     {
         isUsing = true;
 
-        // Ferma il movimento
         if (controller != null)
             controller.enabled = false;
 
-        puntatore.SetActive(false); // disattivo il puntatore HUD
-        movementScript.enabled = false; // disattivo movimento player
+        puntatore.SetActive(false);
+        movementScript.enabled = false;
 
-        computerUI.SetActive(true); // attiva l'intera NewComputerUI
-        panelOutlook.SetActive(true); // mostra Panel_Outlook come prima schermata
-        interactionMessage.SetActive(false); // nasconde messaggio E
+        GameManager.instance.MostraUIFaseAttuale(); // mostra UI fase
+
+        // Attiva il Panel_PC_Display corretto in base alla fase attuale
+        int faseIndex = (int)GameManager.instance.faseAttuale;
+        panelsPCDisplay[faseIndex].SetActive(true);
+
+        interactionMessage.SetActive(false);
 
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+        cameraLookScript.enabled = false;
+
     }
+
 
     void DeactivateComputer()
     {
@@ -62,12 +67,21 @@ public class ComputerInteraction : MonoBehaviour
         if (controller != null)
             controller.enabled = true;
 
-        puntatore.SetActive(true); // riattivo il puntatore HUD
-        movementScript.enabled = true; // riattivo movimento player
+        puntatore.SetActive(true);
+        movementScript.enabled = true;
 
-        computerUI.SetActive(false); // disattiva l'intera NewComputerUI
+        GameManager.instance.NascondiTutteUIFasi();
+
+        // Disattiva tutti i panel display
+        foreach (GameObject panel in panelsPCDisplay)
+        {
+            panel.SetActive(false);
+        }
+
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        cameraLookScript.enabled = true;
+
     }
 
     private void OnTriggerEnter(Collider other)
@@ -86,7 +100,6 @@ public class ComputerInteraction : MonoBehaviour
         {
             isNear = false;
             interactionMessage.SetActive(false);
-            Debug.Log("Giocatore si è allontanato dal computer");
 
             if (isUsing)
                 DeactivateComputer();

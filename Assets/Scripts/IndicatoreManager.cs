@@ -23,7 +23,7 @@ public class IndicatorManager : MonoBehaviour
         AggiornaIndicator();
     }
 
-    public void RiduciValore(float amount)
+    public void RiduciValore(int amount)
     {
         punteggio -= 25;
         if (punteggio < 0)

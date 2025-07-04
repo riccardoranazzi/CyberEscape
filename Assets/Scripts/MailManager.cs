@@ -1,16 +1,12 @@
 using UnityEngine;
-
 using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
 
 public class MailManager : MonoBehaviour
 {
-    public GameObject panelOutlook;
-    public GameObject panelMailDetails;
     public GameObject mailItemPrefab;
     public Transform mailListContent;
-    public ComputerUIManager uiManager;
 
     public TMP_Text mittenteText;
     public TMP_Text oggettoText;
@@ -22,9 +18,23 @@ public class MailManager : MonoBehaviour
     private Mail mailSelezionata;
     private int mailIdCounter = 0;
 
+    public static MailManager instance;
+
+    void Awake()
+    {
+        if (instance == null)
+            instance = this;
+        else
+            Destroy(gameObject);
+    }
+
+    public int GetNumeroMailTotali()
+    {
+        return mails.Count;
+    }
+
     void Start()
     {
-        // Carica lista mail di test
         LoadMails();
         PopulateMailList();
     }
@@ -71,8 +81,8 @@ Ufficio Risorse Umane",
             iniziali = "HR",
             isPhishing = true,
             isAmbigua = true,
-            punteggioCorretto = 10, 
-            punteggioSbagliato = -5 
+            punteggioCorretto = 10,
+            punteggioSbagliato = -5
         });
 
 
@@ -91,8 +101,8 @@ Giulia Ferri – Dip. Operazioni",
             iniziali = "GF",
             isPhishing = false,
             isAmbigua = true,
-            punteggioCorretto = 10, 
-            punteggioSbagliato = -5 
+            punteggioCorretto = 10,
+            punteggioSbagliato = -5
         });
 
         // AFFIDABILE (ordine pagamento)
@@ -140,7 +150,7 @@ Clicca sul link qui sotto o il tuo account sarà sospeso tra 30 minuti.",
             mittente = "Pagamento Web <no-reply@pagamentoweb.biz>",
             oggetto = "Ricevuta pagamento disponibile",
             corpo = @"La ricevuta del tuo pagamento è pronta:
-Clicca qui per contestare la transazione se non riconosci l’addebito.",
+        Clicca qui per contestare la transazione se non riconosci l’addebito.",
             link = "http://pagamentoweb.biz/documento",
             iniziali = "PW",
             isPhishing = true,
@@ -163,8 +173,8 @@ In caso contrario, clicca il link qui sotto:",
             iniziali = "ST",
             isPhishing = false,
             isAmbigua = true,
-            punteggioCorretto = 10, 
-            punteggioSbagliato = -5 
+            punteggioCorretto = 10,
+            punteggioSbagliato = -5
         });
 
         /*
@@ -176,12 +186,12 @@ In caso contrario, clicca il link qui sotto:",
             mittente = "Portal Security <security@azienda.com>",
             oggetto = "Conferma accesso dispositivo non riconosciuto",
             corpo = @"Gentile utente,
-login rilevato da un nuovo dispositivo.
-IP: 192.168.35.12
-Dispositivo: Chrome / Milano
+        login rilevato da un nuovo dispositivo.
+        IP: 192.168.35.12
+        Dispositivo: Chrome / Milano
 
-Se non sei stato tu, cambia la password:
-https://portal.azienda.it/security/profilo",
+        Se non sei stato tu, cambia la password:
+        https://portal.azienda.it/security/profilo",
             link = "https://portal.azienda.it/security/profilo",
             iniziali = "PS",
             isPhishing = false,
@@ -189,7 +199,7 @@ https://portal.azienda.it/security/profilo",
             punteggioCorretto = 5, // es. phishing facile +5
             punteggioSbagliato = -10 // phishing facile -10
         });
-        
+
 
         // EMAIL CON FILE INFETTO - PHISHING 1
         mails.Add(new Mail
@@ -198,7 +208,7 @@ https://portal.azienda.it/security/profilo",
             mittente = "Contabilità Fornitori <contabilita@nom3azienda.com>",
             oggetto = "[Fattura Proforma] URGENTE - Ordine #9033",
             corpo = @"In allegato trovi la fattura da validare.
-Password: 2206",
+        Password: 2206",
             link = "fattura_9033.zip",
             iniziali = "CF",
             isPhishing = true,
@@ -206,7 +216,7 @@ Password: 2206",
             punteggioCorretto = 5, 
             punteggioSbagliato = -10 
         });
-        
+
 
         // EMAIL CON FILE INFETTO - PHISHING 2
         mails.Add(new Mail
@@ -235,8 +245,8 @@ Apreire il file e inviarlo controfirmato per avviare la pratica.",
             iniziali = "LD",
             isPhishing = true,
             isAmbigua = true,
-            punteggioCorretto = 10, 
-            punteggioSbagliato = -5 
+            punteggioCorretto = 10,
+            punteggioSbagliato = -5
         });
 
         // EMAIL AFFIDABILE - FILE + LINK
@@ -251,21 +261,24 @@ Apreire il file e inviarlo controfirmato per avviare la pratica.",
             isPhishing = false,
             isAmbigua = false,
             punteggioCorretto = 5,
-            punteggioSbagliato = -10 
+            punteggioSbagliato = -10
         });
     }
 
-
+void PopulateMailList()
+    {
+        foreach (Mail mail in mails)
+        {
+            GameObject item = Instantiate(mailItemPrefab, mailListContent);
+            item.GetComponent<MailItemUI>().Setup(mail, this);
+        }
+    }
 
     public void RefreshMailList()
     {
-        // Pulisci lista attuale
         foreach (Transform child in mailListContent)
-        {
             Destroy(child.gameObject);
-        }
 
-        // Rigenera lista con mail senza azione registrata
         foreach (Mail mail in mails)
         {
             if (string.IsNullOrEmpty(mail.azione))
@@ -276,77 +289,80 @@ Apreire il file e inviarlo controfirmato per avviare la pratica.",
         }
     }
 
-
-    void PopulateMailList()
-    {
-        foreach (Mail mail in mails)
-        {
-            GameObject item = Instantiate(mailItemPrefab, mailListContent);
-            item.GetComponent<MailItemUI>().Setup(mail, this);
-        }
-    }
-
     public void OpenMailDetails(Mail mail)
     {
         mailSelezionata = mail;
 
-        // aggiorna i testi dettagli mail come già implementato
         mittenteText.text = mail.mittente;
         oggettoText.text = mail.oggetto;
         corpoText.text = mail.corpo;
         linkText.text = mail.link;
         inizialiText.text = mail.iniziali;
-        
 
-        // chiama UI Manager
-        uiManager.OpenMailDetails();
+        // Usa Fase1UIManager per mostrare i dettagli
+        Fase1UIManager.instance.OpenMailDetails();
     }
 
     public void CloseMailDetails()
     {
-        panelMailDetails.SetActive(false);
-        panelOutlook.SetActive(true);
+        Fase1UIManager.instance.CloseMailDetails();
     }
 
     public void InoltraApriMail()
     {
-        Debug.Log("Mail aprta: " + mailSelezionata.oggetto + " | Phishing: " + mailSelezionata.isPhishing + "Mail id: " + mailSelezionata.id);
+        Debug.Log($"Mail aperta: {mailSelezionata.oggetto} | Phishing: {mailSelezionata.isPhishing} | ID: {mailSelezionata.id}");
 
         mailSelezionata.azione = "aperta";
+        GestisciAzioneMail(mailSelezionata, "aperta");
 
         RefreshMailList();
         CloseMailDetails();
         ControllaMailGestite();
 
-        GestisciAzioneMail(mailSelezionata, "aperta");
-
-        // Feedback base
         corpoText.text += "\n\n[Azione: inoltrata o aperta]";
     }
 
     public void SegnalaMail()
     {
-        Debug.Log("Mail segnalata: " + mailSelezionata.oggetto + " | Phishing: " + mailSelezionata.isPhishing + "Mail id: " + mailSelezionata.id);
+        Debug.Log($"Mail segnalata: {mailSelezionata.oggetto} | Phishing: {mailSelezionata.isPhishing} | ID: {mailSelezionata.id}");
 
         mailSelezionata.azione = "segnalata";
+        GestisciAzioneMail(mailSelezionata, "segnalata");
 
         if (mailSelezionata.isPhishing)
-        {
             corpoText.text += "\n\n[✔ Segnalazione corretta]";
-        }
         else
-        {
             corpoText.text += "\n\n[✖ Falso positivo]";
-        }
-
-        GestisciAzioneMail(mailSelezionata, "segnalata");
 
         RefreshMailList();
         CloseMailDetails();
         ControllaMailGestite();
     }
 
-    //funzione per trogliere le check mail dalla checklist
+    public void GestisciAzioneMail(Mail mail, string azione)
+    {
+        if (azione == "segnalata")
+        {
+            if (mail.isPhishing)
+                ScoreManager.instance.AggiungiPunti(mail.punteggioCorretto);
+            else
+            {
+                ScoreManager.instance.SottraiPunti(mail.punteggioSbagliato);
+                IndicatorManager.instance.RiduciValore(25);
+            }
+        }
+        else if (azione == "aperta")
+        {
+            if (!mail.isPhishing)
+                ScoreManager.instance.AggiungiPunti(mail.punteggioCorretto);
+            else
+            {
+                ScoreManager.instance.SottraiPunti(mail.punteggioSbagliato);
+                IndicatorManager.instance.RiduciValore(25);
+            }
+        }
+    }
+
     public void ControllaMailGestite()
     {
         bool tutteGestite = true;
@@ -362,42 +378,7 @@ Apreire il file e inviarlo controfirmato per avviare la pratica.",
 
         if (tutteGestite)
         {
-            FindObjectOfType<ChecklistManager>().CompletaTask("Rispondi a tutte le mail");
+            FindObjectOfType<ChecklistManager>().CompletaTask(0);
         }
     }
-
-    public void GestisciAzioneMail(Mail mail, string azione)
-    {
-        mail.azione = azione;
-
-        if (azione == "segnalata")
-        {
-            if (mail.isPhishing)
-            {
-                ScoreManager.instance.AggiungiPunti(mail.punteggioCorretto);
-                // Azione corretta: non riduce indicator
-            }
-            else
-            {
-                ScoreManager.instance.SottraiPunti(mail.punteggioSbagliato);
-                IndicatorManager.instance.RiduciValore(25);
-            }
-        }
-        else if (azione == "aperta")
-        {
-            if (!mail.isPhishing)
-            {
-                ScoreManager.instance.AggiungiPunti(mail.punteggioCorretto);
-                // Azione corretta: non riduce indicator
-            }
-            else
-            {
-                ScoreManager.instance.SottraiPunti(mail.punteggioSbagliato);
-                IndicatorManager.instance.RiduciValore(25);
-            }
-        }
-
-        // Aggiorna checklist, refresh lista, ecc.
-    }
-
 }

@@ -16,22 +16,15 @@ public class GameManager : MonoBehaviour
 
     public Fase faseAttuale;
 
-    // UI Panels
-    public GameObject panelFase1_UI;
-    public GameObject panelFase2_UI;
-    public GameObject panelFase3_UI;
-    public GameObject panelFase4_UI;
-    public GameObject panelFase5_UI;
-    public GameObject panelGameOver_UI;
+    // UI Panels fasi
+    public GameObject panelPCFase1_Display;
+    public GameObject panelPCFase2_Display;
+    public GameObject panelPCFase3_Display;
+    public GameObject panelPCFase4_Display;
+    public GameObject panelPCFase5_Display;
+    public GameObject panelGameOver_Display;
 
-    public GameObject panelPCFase1_UI;
-    public GameObject panelPCFase2_UI;
-    public GameObject panelPCFase3_UI;
-    public GameObject panelPCFase4_UI;
-    public GameObject panelPCFase5_UI;
-
-
-    // Fase Managers
+    // Managers fasi
     public GameObject fase1Manager;
     public GameObject fase2Manager;
     public GameObject fase3Manager;
@@ -58,53 +51,42 @@ public class GameManager : MonoBehaviour
         switch (faseAttuale)
         {
             case Fase.Smistamento:
-                panelFase1_UI.SetActive(true);
+                panelPCFase1_Display.SetActive(true);
                 break;
             case Fase.Segnalazione:
-                panelFase2_UI.SetActive(true);
+                panelPCFase2_Display.SetActive(true);
                 break;
             case Fase.AzioniCorrettive:
-                panelFase3_UI.SetActive(true);
+                panelPCFase3_Display.SetActive(true);
                 break;
             case Fase.Ripristino:
-                panelFase4_UI.SetActive(true);
+                panelPCFase4_Display.SetActive(true);
                 break;
             case Fase.Prevenzione:
-                panelFase5_UI.SetActive(true);
+                panelPCFase5_Display.SetActive(true);
                 break;
             case Fase.GameOver:
-                panelGameOver_UI.SetActive(true);
+                panelGameOver_Display.SetActive(true);
                 break;
         }
     }
 
     public void NascondiTutteUIFasi()
     {
-        panelFase1_UI.SetActive(false);
-        panelFase2_UI.SetActive(false);
-        panelFase3_UI.SetActive(false);
-        panelFase4_UI.SetActive(false);
-        panelFase5_UI.SetActive(false);
-        panelGameOver_UI.SetActive(false);
+        panelPCFase1_Display.SetActive(false);
+        panelPCFase2_Display.SetActive(false);
+        panelPCFase3_Display.SetActive(false);
+        panelPCFase4_Display.SetActive(false);
+        panelPCFase5_Display.SetActive(false);
+        panelGameOver_Display.SetActive(false);
     }
-
 
     void DisattivaTutteLeFasi()
     {
-        // UI Panels
-        panelFase1_UI.SetActive(false);
-        panelFase2_UI.SetActive(false);
-        panelFase3_UI.SetActive(false);
-        panelFase4_UI.SetActive(false);
-        panelFase5_UI.SetActive(false);
-        panelGameOver_UI.SetActive(false);
+        // Disattiva UI Panels fasi
+        NascondiTutteUIFasi();
 
-        panelPCFase1_UI.SetActive(false);
-        panelPCFase2_UI.SetActive(false);
-        panelPCFase4_UI.SetActive(false);
-        panelPCFase5_UI.SetActive(false);
-
-        // Fase Managers
+        // Disattiva Managers fasi
         fase1Manager.SetActive(false);
         fase2Manager.SetActive(false);
         fase3Manager.SetActive(false);
@@ -115,24 +97,26 @@ public class GameManager : MonoBehaviour
     public void AvviaFase1()
     {
         DisattivaTutteLeFasi();
-
-
         faseAttuale = Fase.Smistamento;
+        panelPCFase1_Display.SetActive(true);
 
-        panelFase1_UI.SetActive(true);
         fase1Manager.SetActive(true);
-
         Debug.Log("✔ Fase 1: Smistamento avviata.");
     }
 
     public void AvviaFase2()
     {
+
+
+        Debug.Log("✔ AvviaFase2 chiamato");
+        Debug.Log("panelPCFase2_Display: " + (panelPCFase2_Display != null));
+        Debug.Log("fase2Manager: " + (fase2Manager != null));
+
         DisattivaTutteLeFasi();
         faseAttuale = Fase.Segnalazione;
 
-        panelFase2_UI.SetActive(true);
+        panelPCFase2_Display.SetActive(true);
         fase2Manager.SetActive(true);
-
         Debug.Log("✔ Fase 2: Segnalazione avviata.");
     }
 
@@ -141,8 +125,25 @@ public class GameManager : MonoBehaviour
         DisattivaTutteLeFasi();
         faseAttuale = Fase.AzioniCorrettive;
 
-        panelFase3_UI.SetActive(true);
-        fase3Manager.SetActive(true);
+        if (panelPCFase3_Display != null)
+        {
+            panelPCFase3_Display.SetActive(true);
+            Debug.Log("✔ PanelPCFase3_Display attivato");
+        }
+        else
+        {
+            Debug.LogError("❌ panelPCFase3_Display non assegnato!");
+        }
+
+        if (fase3Manager != null)
+        {
+            fase3Manager.SetActive(true);
+            Debug.Log("✔ Fase3Manager attivato");
+        }
+        else
+        {
+            Debug.LogError("❌ fase3Manager non assegnato!");
+        }
 
         Debug.Log("✔ Fase 3: Azioni correttive avviata.");
     }
@@ -151,10 +152,8 @@ public class GameManager : MonoBehaviour
     {
         DisattivaTutteLeFasi();
         faseAttuale = Fase.Ripristino;
-
-        panelFase4_UI.SetActive(true);
+        panelPCFase4_Display.SetActive(true);
         fase4Manager.SetActive(true);
-
         Debug.Log("✔ Fase 4: Ripristino avviato.");
     }
 
@@ -162,10 +161,8 @@ public class GameManager : MonoBehaviour
     {
         DisattivaTutteLeFasi();
         faseAttuale = Fase.Prevenzione;
-
-        panelFase5_UI.SetActive(true);
+        panelPCFase5_Display.SetActive(true);
         fase5Manager.SetActive(true);
-
         Debug.Log("✔ Fase 5: Implementazione tecnologie preventive avviata.");
     }
 
@@ -173,14 +170,16 @@ public class GameManager : MonoBehaviour
     {
         DisattivaTutteLeFasi();
         faseAttuale = Fase.GameOver;
-
-        panelGameOver_UI.SetActive(true);
-
+     
+        panelGameOver_Display.SetActive(true);
         Debug.Log("✔ GAME OVER o Fine partita.");
     }
 
     public void CompletaFase()
     {
+
+        Debug.Log("✔ CompletaFase chiamato: fase attuale = " + faseAttuale);
+
         switch (faseAttuale)
         {
             case Fase.Smistamento:
@@ -201,6 +200,12 @@ public class GameManager : MonoBehaviour
             case Fase.GameOver:
                 Debug.Log("✔ Partita conclusa.");
                 break;
+        }
+
+        ComputerInteraction computer = FindObjectOfType<ComputerInteraction>();
+        if (computer != null && computer.isUsing) // Se il giocatore sta usando il PC
+        {
+            computer.AggiornaUIFaseAttuale();
         }
     }
 }

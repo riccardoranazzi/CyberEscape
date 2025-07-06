@@ -9,14 +9,26 @@ public class ChecklistManager : MonoBehaviour
 
     public List<ChecklistItem> checklist = new List<ChecklistItem>();
 
+    public static ChecklistManager instance;
+
+    void Awake()
+    {
+        if (instance == null)
+            instance = this;
+        else
+            Destroy(gameObject);
+    }
+
     void Start()
     {
-        // Esempio task progressiva Fase 1
-        checklist.Add(new ChecklistItem(0, "Controlla e rispondi a tutte le mail", MailManager.instance.GetNumeroMailTotali()));
+        // Esempio task per Fase 1
+        checklist.Add(new ChecklistItem(0, "Controlla e rispondi a tutte le mail"));
+        checklist.Add(new ChecklistItem(1, "Segnala l'incidente informatico"));
+        checklist.Add(new ChecklistItem(2, "Esegui tutte le azioni correttive"));
+
 
         AggiornaChecklistUI();
     }
-
 
     public void CompletaTask(int fase)
     {
@@ -25,7 +37,7 @@ public class ChecklistManager : MonoBehaviour
             if (item.fase == fase)
             {
                 item.completato = true;
-                Debug.Log("Task completato: " + item.fase + ": " + item.descrizione);
+                Debug.Log("✔ Task completato: " + item.descrizione);
                 break;
             }
         }
@@ -36,21 +48,23 @@ public class ChecklistManager : MonoBehaviour
 
     void AggiornaChecklistUI()
     {
+        Debug.Log("AggiornaChecklistUI chiamato. Items: " + checklist.Count);
+
         foreach (Transform child in checklistContent)
-        {
             Destroy(child.gameObject);
-        }
 
         foreach (ChecklistItem item in checklist)
         {
             GameObject obj = Instantiate(checklistItemPrefab, checklistContent);
             TMP_Text txt = obj.GetComponentInChildren<TMP_Text>();
 
-            if (item.progressiTotali > 0)
-                txt.text = $"{item.descrizione}: {item.progressiAttuali}/{item.progressiTotali}";
-            else
-                txt.text = item.descrizione;
+            if (txt == null)
+            {
+                Debug.LogError("❌ TMP_Text non trovato nel prefab!");
+                return;
+            }
 
+            txt.text = item.descrizione;
             txt.color = item.completato ? Color.green : Color.black;
         }
     }
@@ -58,42 +72,28 @@ public class ChecklistManager : MonoBehaviour
 
     void VerificaChecklistCompletata()
     {
-        bool tuttiCompletati = true;
+        bool taskFaseAttualeCompletato = false;
 
         foreach (ChecklistItem item in checklist)
         {
-            if (!item.completato)
+            if (item.fase == (int)GameManager.instance.faseAttuale)
             {
-                tuttiCompletati = false;
+                Debug.Log($"Verifica task fase {item.fase}: {item.descrizione} | Completato: {item.completato}");
+
+                taskFaseAttualeCompletato = item.completato;
                 break;
             }
         }
 
-        if (tuttiCompletati)
+        if (taskFaseAttualeCompletato)
         {
-            Debug.Log("Tutte le task completate!");
+            Debug.Log("✔ Task della fase attuale completato! Chiamo GameManager.CompletaFase()");
             GameManager.instance.CompletaFase();
-            // Trigger prossima fase qui se serve
         }
-    }
-
-    public void IncrementaProgressi(int fase)
-    {
-        foreach (ChecklistItem item in checklist)
+        else
         {
-            if (item.fase == fase)
-            {
-                item.progressiAttuali++;
-
-                if (item.progressiAttuali >= item.progressiTotali)
-                    item.completato = true;
-
-                break;
-            }
+            Debug.Log("✖ Task della fase attuale NON completato.");
         }
-
-        AggiornaChecklistUI();
-        VerificaChecklistCompletata();
     }
 
 }

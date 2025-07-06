@@ -369,6 +369,7 @@ void PopulateMailList()
 
         foreach (Mail mail in mails)
         {
+            Debug.Log($"Mail: {mail.oggetto} | Azione: {mail.azione}");
             if (string.IsNullOrEmpty(mail.azione))
             {
                 tutteGestite = false;
@@ -378,7 +379,8 @@ void PopulateMailList()
 
         if (tutteGestite)
         {
-            FindObjectOfType<ChecklistManager>().CompletaTask(0);
+            Debug.Log("✔ Tutte le mail gestite. Chiamo CompletaTask(0).");
+            ChecklistManager.instance.CompletaTask(0);
         }
     }
 }

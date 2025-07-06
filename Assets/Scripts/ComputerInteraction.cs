@@ -5,11 +5,11 @@ public class ComputerInteraction : MonoBehaviour
     public Transform player;
     public GameObject interactionMessage;
     public GameObject puntatore;
-    public GameObject[] panelsPCDisplay; 
-
+    public GameObject uiPCMain; // UI principale PC
+    public GameObject[] panelsPCDisplay; // array panel per fasi
 
     private bool isNear = false;
-    private bool isUsing = false;
+    public bool isUsing = false;
 
     private CharacterController controller;
     private PlayerMovement movementScript;
@@ -20,8 +20,14 @@ public class ComputerInteraction : MonoBehaviour
         puntatore.SetActive(true);
         controller = player.GetComponent<CharacterController>();
         movementScript = player.GetComponent<PlayerMovement>();
-        interactionMessage.SetActive(false);
         cameraLookScript = player.GetComponentInChildren<MouseLook>();
+
+        interactionMessage.SetActive(false);
+        uiPCMain.SetActive(false); // UI PC spenta all'avvio
+
+        // Disattiva tutti i panel fasi all'avvio
+        foreach (GameObject panel in panelsPCDisplay)
+            panel.SetActive(false);
     }
 
     void Update()
@@ -35,6 +41,19 @@ public class ComputerInteraction : MonoBehaviour
         }
     }
 
+    public void AggiornaUIFaseAttuale()
+    {
+        // Disattiva tutti i panels
+        foreach (GameObject panel in panelsPCDisplay)
+            panel.SetActive(false);
+
+        // Attiva panel della fase attuale
+        int faseIndex = (int)GameManager.instance.faseAttuale;
+        panelsPCDisplay[faseIndex].SetActive(true);
+
+        Debug.Log("✔ UI PC aggiornata alla nuova fase: " + GameManager.instance.faseAttuale);
+    }
+
     void ActivateComputer()
     {
         isUsing = true;
@@ -44,8 +63,10 @@ public class ComputerInteraction : MonoBehaviour
 
         puntatore.SetActive(false);
         movementScript.enabled = false;
+        cameraLookScript.enabled = false;
 
-        GameManager.instance.MostraUIFaseAttuale(); // mostra UI fase
+        uiPCMain.SetActive(true); // attiva UI PC principale
+        GameManager.instance.MostraUIFaseAttuale(); // mostra UI fase attuale
 
         // Attiva il Panel_PC_Display corretto in base alla fase attuale
         int faseIndex = (int)GameManager.instance.faseAttuale;
@@ -55,8 +76,8 @@ public class ComputerInteraction : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
-        cameraLookScript.enabled = false;
 
+        Debug.Log("✔ Computer attivato");
     }
 
 
@@ -69,30 +90,19 @@ public class ComputerInteraction : MonoBehaviour
 
         puntatore.SetActive(true);
         movementScript.enabled = true;
+        cameraLookScript.enabled = true;
 
-        GameManager.instance.NascondiTutteUIFasi();
-
-        // Disattiva tutti i panel display
         foreach (GameObject panel in panelsPCDisplay)
-        {
             panel.SetActive(false);
-        }
+
+        uiPCMain.SetActive(false); // disattiva UI_PC_Main
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-        cameraLookScript.enabled = true;
 
+        Debug.Log("✔ Computer disattivato");
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Player") && !isUsing)
-        {
-            isNear = true;
-            interactionMessage.SetActive(true);
-            Debug.Log("Giocatore vicino al computer");
-        }
-    }
 
     private void OnTriggerExit(Collider other)
     {
@@ -105,4 +115,15 @@ public class ComputerInteraction : MonoBehaviour
                 DeactivateComputer();
         }
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player") && !isUsing)
+        {
+            isNear = true;
+            interactionMessage.SetActive(true);
+            Debug.Log("✔ Giocatore vicino al computer");
+        }
+    }
+
 }
